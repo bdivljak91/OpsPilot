@@ -25,7 +25,7 @@ The project starts as a clean backend system and gradually evolves into an appli
 ## Tech Stack
 
 - Java 21
-- Spring Boot 3
+- Spring Boot 4.1.0 
 - PostgreSQL
 - Flyway
 - Docker
