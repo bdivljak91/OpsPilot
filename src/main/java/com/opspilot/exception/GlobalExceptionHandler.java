@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -19,7 +20,7 @@ public class GlobalExceptionHandler {
     ) {
         return buildErrorResponse(
                 HttpStatus.NOT_FOUND,
-                exception.getMessage(),
+                List.of(exception.getMessage()),
                 request.getRequestURI()
         );
     }
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
     ) {
         return buildErrorResponse(
                 HttpStatus.BAD_REQUEST,
-                exception.getMessage(),
+                List.of(exception.getMessage()),
                 request.getRequestURI()
         );
     }
@@ -41,16 +42,17 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException exception,
             HttpServletRequest request
     ) {
-        String message = exception.getBindingResult()
+        List<String> messages = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .findFirst()
-                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                .orElse("Validation failed");
+                .map(error ->
+                        error.getField() + ": " + error.getDefaultMessage()
+                )
+                .toList();
 
         return buildErrorResponse(
                 HttpStatus.BAD_REQUEST,
-                message,
+                messages,
                 request.getRequestURI()
         );
     }
@@ -62,21 +64,21 @@ public class GlobalExceptionHandler {
     ) {
         return buildErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "An unexpected error occurred",
+                List.of("An unexpected error occurred"),
                 request.getRequestURI()
         );
     }
 
     private ResponseEntity<ApiErrorResponse> buildErrorResponse(
             HttpStatus status,
-            String message,
+            List<String> messages,
             String path
     ) {
         ApiErrorResponse response = new ApiErrorResponse(
                 Instant.now(),
                 status.value(),
                 status.getReasonPhrase(),
-                message,
+                messages,
                 path
         );
 
