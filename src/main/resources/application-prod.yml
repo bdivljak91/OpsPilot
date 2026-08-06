@@ -1,0 +1,4 @@
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    com.opspilot: ${LOGGING_LEVEL_COM_OPSPILOT:INFO}
