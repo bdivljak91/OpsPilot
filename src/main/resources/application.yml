@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: opspilot
+
+logging:
+  level:
+    root: INFO
+    com.opspilot: INFO
