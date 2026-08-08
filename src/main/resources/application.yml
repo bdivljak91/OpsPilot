@@ -1,6 +1,12 @@
 spring:
   application:
     name: opspilot
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
 
 logging:
   level:
